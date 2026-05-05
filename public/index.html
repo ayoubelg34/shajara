@@ -23,13 +23,48 @@
   --glow: rgba(201,168,76,0.08); --star-op:1;
 }
 [data-theme="light"] {
-  --bg: #f0ebe0; --bg2: #e8e0d0; --bg3: #ddd4c2;
-  --card: rgba(255,252,245,0.7); --card2: rgba(245,238,222,0.75);
-  --border: rgba(180,160,130,0.35); --border2: rgba(160,140,110,0.3);
-  --text: #2a2018; --text2: #5a4a38; --text3: #9a8a78;
-  --shadow: 0 8px 32px rgba(0,0,0,0.08);
-  --glow: rgba(201,168,76,0.12); --star-op:0;
+  --bg: #fcfbf9; --bg2: #f5f2ec; --bg3: #e8e2d5;
+  --card: rgba(255,255,255,0.85); --card2: rgba(250,248,245,0.9);
+  --border: rgba(180,160,130,0.25); --border2: rgba(160,140,110,0.2);
+  --text: #1a1510; --text2: #4a3c2e; --text3: #8a7865;
+  --shadow: 0 8px 32px rgba(0,0,0,0.06);
+  --glow: rgba(179,143,54,0.08); --star-op:0;
 }
+[data-theme="light"]:not([data-palette]), [data-theme="light"][data-palette="default"] {
+  --gold: #b38f36; --gold2: #d1ab4e; --gold-dim: rgba(179,143,54,0.15);
+}
+
+/* PALETTES */
+[data-palette="emerald"] {
+  --gold: #2a7a52; --gold2: #38c47a; --gold-dim: rgba(42,122,82,0.18);
+  --glow: rgba(42,122,82,0.08);
+}
+[data-theme="light"][data-palette="emerald"] {
+  --gold: #205c3d; --gold2: #2e8a56; --gold-dim: rgba(32,92,61,0.15);
+  --glow: rgba(32,92,61,0.08);
+}
+[data-palette="sapphire"] {
+  --gold: #3b82f6; --gold2: #60a5fa; --gold-dim: rgba(59,130,246,0.18);
+  --glow: rgba(59,130,246,0.08);
+}
+[data-theme="light"][data-palette="sapphire"] {
+  --gold: #2563eb; --gold2: #3b82f6; --gold-dim: rgba(37,99,235,0.15);
+  --glow: rgba(37,99,235,0.08);
+}
+[data-palette="amethyst"] {
+  --gold: #8b5cf6; --gold2: #a78bfa; --gold-dim: rgba(139,92,246,0.18);
+  --glow: rgba(139,92,246,0.08);
+}
+[data-theme="light"][data-palette="amethyst"] {
+  --gold: #7c3aed; --gold2: #8b5cf6; --gold-dim: rgba(124,58,237,0.15);
+  --glow: rgba(124,58,237,0.08);
+}
+
+/* Palette UI selection dots */
+.palette-row { display:flex; gap:12px; margin-top:12px; flex-wrap:wrap; }
+.palette-dot { width:32px; height:32px; border-radius:50%; border:2px solid transparent; cursor:pointer; transition:var(--trans); box-shadow:0 2px 8px rgba(0,0,0,0.15); }
+.palette-dot:hover { transform:scale(1.1); }
+.palette-dot.active { border-color:var(--text); box-shadow:0 0 16px var(--gold); transform:scale(1.15); }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .5s,color .5s;overflow-x:hidden}
@@ -601,6 +636,17 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
         </select>
       </div>
 
+      <!-- Palette Selection -->
+      <div class="profile-section" style="margin-top:16px;">
+        <div class="profile-section-title">🎨 Thème et Couleurs</div>
+        <div class="palette-row">
+          <div class="palette-dot" style="background:linear-gradient(135deg, #c9a84c, #e6c97a)" onclick="setPalette('default')" id="pal_default"></div>
+          <div class="palette-dot" style="background:linear-gradient(135deg, #2a7a52, #38c47a)" onclick="setPalette('emerald')" id="pal_emerald"></div>
+          <div class="palette-dot" style="background:linear-gradient(135deg, #3b82f6, #60a5fa)" onclick="setPalette('sapphire')" id="pal_sapphire"></div>
+          <div class="palette-dot" style="background:linear-gradient(135deg, #8b5cf6, #a78bfa)" onclick="setPalette('amethyst')" id="pal_amethyst"></div>
+        </div>
+      </div>
+
       <!-- Actions -->
       <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px;">
         <button class="loc-btn loc-btn-secondary" onclick="authLogout()">👋 Se déconnecter</button>
@@ -1014,6 +1060,27 @@ function applyAutoTheme(){
   const isDark = now >= maghrib || now < fajr;
   document.documentElement.setAttribute('data-theme', isDark?'dark':'light');
 }
+
+// ═══════════════════════════ THEME & PALETTE ═══════════════════════════
+function setPalette(pal) {
+  const html = document.documentElement;
+  if (!pal || pal === 'default') {
+    html.removeAttribute('data-palette');
+    localStorage.setItem('shajara_palette', 'default');
+  } else {
+    html.setAttribute('data-palette', pal);
+    localStorage.setItem('shajara_palette', pal);
+  }
+  document.querySelectorAll('.palette-dot').forEach(el => el.classList.remove('active'));
+  const activeDot = document.getElementById('pal_' + (pal || 'default'));
+  if (activeDot) activeDot.classList.add('active');
+}
+
+function initPalette() {
+  const saved = localStorage.getItem('shajara_palette') || 'default';
+  setPalette(saved);
+}
+initPalette();
 
 document.getElementById('themeToggle').addEventListener('click', ()=>{
   const html=document.documentElement;
