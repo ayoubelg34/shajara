@@ -1,0 +1,21 @@
+{
+  "name": "shajara",
+  "version": "2.0.0",
+  "description": "شجرة الإيمان — Shajara Al-Iman: Plateforme de suivi spirituel islamique",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["islam", "prayer", "quran", "spiritual"],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "sqlite3": "^6.0.1"
+  }
+}

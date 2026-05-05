@@ -1,0 +1,200 @@
+<canvas id="bgCanvas"></canvas>
+
+<div class="app">
+  <!-- LEFT: TREE PANEL -->
+  <div class="tree-panel">
+    <div class="tree-header">
+      <div class="tree-title">شجرة الإيمان</div>
+      <div class="tree-subtitle">L'arbre de ta foi grandit avec tes actes</div>
+    </div>
+    <canvas id="treeCanvas" width="600" height="660"></canvas>
+    <div class="iman-footer">
+      <div class="iman-label">Niveau d'Iman — مستوى الإيمان</div>
+      <div class="iman-bar-track"><div class="iman-bar-fill" id="imanFill" style="width:0%"></div></div>
+      <div class="iman-numbers">
+        <span class="iman-pct" id="imanPct">0%</span>
+        <span class="iman-lvl" id="imanLvl">Graine</span>
+      </div>
+      <div class="iman-desc" id="imanDesc">Commence ta journée avec Bismillah...</div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="content-panel" id="contentPanel">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <button class="btn-ghost" style="padding:8px 14px; font-size:0.75rem; display:flex; align-items:center; gap:8px" onclick="openProfileModal()">
+        <span style="font-size:1.1rem">👤</span> Mon Profil
+      </button>
+      <div class="topbar-right">
+        <div class="prayer-clock">
+          <div class="prayer-dot"></div>
+          <div>
+            <div class="next-label">Prochaine</div>
+            <div class="next-name" id="nextPrayerName">--</div>
+          </div>
+          <div class="next-time" id="nextPrayerTime">--:--</div>
+        </div>
+        <button class="theme-toggle" id="themeToggle" title="Changer le thème" aria-label="Toggle theme"></button>
+      </div>
+    </div>
+
+    <!-- CONTEXTUAL BANNER -->
+    <div class="context-banner" id="contextBanner">
+      <div class="banner-time-label" id="bannerLabel">☀️ Rappel</div>
+      <div class="banner-arabic" id="bannerArabic"></div>
+      <div class="banner-text" id="bannerText"></div>
+      <div class="banner-source" id="bannerSource"></div>
+    </div>
+
+    <!-- WEEK STRIP -->
+    <div class="week-strip" id="weekStrip"></div>
+
+    <!-- FARD -->
+    <div class="section" id="sec-fard">
+      <div class="section-head">
+        <h2>🕌 Prières Obligatoires</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="section-progress" id="prog-fard">0/5</span>
+          <span class="badge badge-fard">Fard — فرض</span>
+        </div>
+      </div>
+      <div class="section-body" id="body-fard"></div>
+    </div>
+
+    <!-- SUNNAH -->
+    <div class="section" id="sec-sunnah">
+      <div class="section-head">
+        <h2>☽ Sounnah Rawatib</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="section-progress" id="prog-sunnah">0/5</span>
+          <span class="badge badge-sunnah">Sounnah — سنة</span>
+        </div>
+      </div>
+      <div class="section-body" id="body-sunnah"></div>
+    </div>
+
+    <!-- ADHKAR -->
+    <div class="section" id="sec-adhkar">
+      <div class="section-head">
+        <h2>📿 Wird & Adhkâr</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="section-progress" id="prog-adhkar">0/4</span>
+          <span class="badge badge-dhikr">Dhikr — ذكر</span>
+        </div>
+      </div>
+      <div class="section-body" id="body-adhkar"></div>
+    </div>
+
+    <!-- CUSTOM TASKS -->
+    <div class="section" id="sec-custom">
+      <div class="section-head">
+        <h2>✦ Mes Tâches</h2>
+        <span class="badge badge-custom">Personnel</span>
+      </div>
+      <div class="section-body" id="body-custom"></div>
+    </div>
+
+    <!-- PRAYER TIMES -->
+    <div class="prayer-times-card">
+      <div class="card-title">🕌 Horaires de Prière</div>
+      <div class="prayer-mini-grid" id="prayerMiniGrid"></div>
+      <div class="countdown-wrap">
+        <span class="countdown-label">Prochaine prière dans</span>
+        <span class="countdown-val" id="countdownVal">—</span>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-card">
+      <div class="card-title">📊 Progression Détaillée</div>
+      <div id="catStats"></div>
+    </div>
+
+    <!-- BADGES -->
+    <div class="badges-card">
+      <div class="card-title">🏆 Récompenses</div>
+      <div class="badges-grid" id="badgesGrid"></div>
+    </div>
+
+    <!-- STREAK -->
+    <div class="streak-card">
+      <div class="card-title">🔥 Constance Hebdomadaire</div>
+      <div class="streak-row" id="streakRow"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TASK MODAL -->
+<div class="overlay" id="overlay" onclick="maybeClose(event)">
+  <div class="modal">
+    <div class="modal-title">✦ Nouvelle Tâche</div>
+    <div class="modal-field">
+      <label class="modal-label">Description</label>
+      <input class="modal-input" id="mDesc" placeholder="Ce que tu veux accomplir..." />
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Catégorie</label>
+      <div class="cat-grid" id="mCatGrid"></div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Heure (optionnel)</label>
+      <input type="time" class="modal-input" id="mTime" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeModal()">Annuler</button>
+      <button class="btn-gold" onclick="saveModal()">Ajouter ✦</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOCATION MODAL -->
+<div class="overlay" id="locOverlay">
+  <div class="modal loc-modal">
+    <span class="loc-icon">🕌</span>
+    <div class="modal-title">Bienvenue sur شجرة الإيمان</div>
+    <p>Pour afficher les horaires de prière précis et adapter le thème jour/nuit, nous avons besoin de ta localisation.</p>
+    <button class="loc-btn loc-btn-primary" id="locGeoBtn" onclick="requestGeolocation()">📍 Utiliser ma position</button>
+    <button class="loc-btn loc-btn-secondary" onclick="showManualCity()">🏙️ Saisir ma ville</button>
+    <div class="loc-input" id="locManual">
+      <input class="modal-input" id="locCity" placeholder="Ex: Paris, Lyon, Marseille..." />
+      <div style="margin-top:10px">
+        <button class="btn-gold" onclick="saveManualCity()">Confirmer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- PROFILE MODAL -->
+<div class="overlay" id="profileOverlay" onclick="if(event.target===this) this.classList.remove('open')">
+  <div class="modal loc-modal">
+    <span class="loc-icon" id="profileIcon">☁️</span>
+    <h2 class="modal-title" id="profileTitle">Sauvegarde ton Arbre !</h2>
+    <p id="profileDesc">Ne perds pas ta progression ! Crée un compte gratuitement pour sauvegarder ton arbre, tes paramètres de localisation et tes horaires de prière sur tous tes appareils.</p>
+    
+    <div id="authForm" style="margin-top:20px; text-align:left">
+      <div class="modal-field">
+        <label class="modal-label">Email</label>
+        <input type="email" id="authEmail" class="modal-input" placeholder="exemple@email.com">
+      </div>
+      <div class="modal-field">
+        <label class="modal-label">Mot de passe</label>
+        <input type="password" id="authPassword" class="modal-input" placeholder="••••••••">
+      </div>
+      
+      <div class="modal-actions" style="flex-direction: column; gap:10px;">
+        <button class="loc-btn loc-btn-primary" onclick="handleAuth('register')">Créer mon compte</button>
+        <button class="btn-ghost" onclick="handleAuth('login')">J'ai déjà un compte (Connexion)</button>
+      </div>
+    </div>
+    
+    <div id="loggedInView" style="display:none; margin-top:20px;">
+      <button class="loc-btn loc-btn-secondary" onclick="authLogout()">Se déconnecter</button>
+    </div>
+
+    <button class="btn-ghost" style="width:100%; margin-top:10px" onclick="document.getElementById('profileOverlay').classList.remove('open')">Fermer</button>
+  </div>
+</div>
