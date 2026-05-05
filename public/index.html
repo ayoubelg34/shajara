@@ -1517,10 +1517,7 @@ function renderWeek(){
 
 // ═══════════════════════════ DATE TITLE ═══════════════════════════
 function renderDate(){
-  const FDAYS=['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
-  const d=new Date(selectedDate+'T00:00:00'),todayKey=dateKey(new Date());
-  const prefix=selectedDate===todayKey?"Aujourd'hui — ":'';
-  document.title=`${prefix}${FDAYS[d.getDay()]} — شجرة الإيمان`;
+  document.title = '📿 Shajara';
 }
 
 // ═══════════════════════════ MODAL ═══════════════════════════
